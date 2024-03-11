@@ -7,9 +7,10 @@ class AuthController {
       const { email, password } = req.body;
 
       const user = await userService.readOneByEmail(email);
-      if (user.password !== password) new Error("not matched user password");
-
+      if (user.password !== password)
+        throw new Error("not matched user password");
       const payload = {
+        uid: user.uid,
         username: user.username,
         email: user.email,
         region: user.region,
@@ -25,8 +26,8 @@ class AuthController {
         accessToken: issuedAccessToken,
         refreshToken: issuedRefreshToken,
       });
-    } catch (err) {
-      throw err;
+    } catch (error) {
+      next(error);
     }
   }
 }

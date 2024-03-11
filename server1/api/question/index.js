@@ -1,10 +1,11 @@
 const questionController = require("../../controllers/question.controller");
+const guardMiddleware = require("../../middlewares/guard.middleware");
 
 const router = require("express").Router();
 
 /**CRUD QUESTION */
-router.post("/", questionController.create);
+router.post("/", guardMiddleware, questionController.create);
 router.get("/", questionController.read);
-router.put("/", questionController.update);
-router.delete("/", questionController.delete);
+router.put("/", guardMiddleware, questionController.update);
+router.delete("/", guardMiddleware, questionController.delete);
 module.exports = router;
