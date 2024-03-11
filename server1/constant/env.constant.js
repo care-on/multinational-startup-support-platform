@@ -9,4 +9,8 @@ module.exports = {
     USER: process.env.DB_USER,
     PASSWORD: process.env.DB_PASSWORD,
   },
+  TOKEN: {
+    ACCESS_SECRET: process.env.ACCESS_SECRET,
+    REFRESH_SECRET: process.env.REFRESH_SECRET,
+  },
 };

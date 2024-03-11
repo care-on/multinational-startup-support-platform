@@ -36,6 +36,19 @@ class UserService {
     }
   }
 
+  async readOneByEmail(email) {
+    try {
+      const user = this.users.find((user) => user.email === email);
+      if (user) {
+        return user;
+      } else {
+        throw new Error("User not found");
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+
   async update(updatedUser) {
     try {
       const result = await connection_pool.query(
