@@ -24,10 +24,10 @@ class QuestionController {
   }
   async update(req, res, next) {
     try {
-      const { uid, qid } = req.query;
+      const { qid } = req.query;
+      const { uid } = req.user;
       const { title, content } = req.body;
       const updatedQuestion = new Question(uid, title, content);
-      if (req.user.uid !== uid) throw new Error("not Matched User");
 
       questionService.update(qid, updatedQuestion);
       res.status(201).json({ message: "Question updated successfully." });
@@ -38,14 +38,18 @@ class QuestionController {
 
   async delete(req, res, next) {
     try {
-      const { qid, uid } = req.query;
+      const { qid } = req.query;
+      const uid = await questionService.findAuthor(Number(qid));
       if (req.user.uid !== uid) throw new Error("not Matched User");
-      questionService.delete(qid);
+      questionService.delete(Number(qid));
       res.status(201).json({ message: "Question deleted successfully." });
     } catch (error) {
       next(error);
     }
   }
+
+  /**TODO: find who author */
+  async isCheckedAuthor() {}
 }
 
 module.exports = new QuestionController();

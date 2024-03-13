@@ -79,8 +79,10 @@ class UserService {
         "DELETE FROM users WHERE uid = ?",
         [uid]
       );
+      console.log(result);
       if (result[0].affectedRows > 0) {
         const deletedUser = this.users.find((user) => user.uid === uid);
+        console.log(`a`, deletedUser);
         this.users = this.users.filter((user) => user.uid !== uid);
         return deletedUser;
       } else {

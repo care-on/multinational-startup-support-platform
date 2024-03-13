@@ -167,11 +167,6 @@
             "type": "string"
           },
           {
-            "name": "uid",
-            "in": "query",
-            "type": "string"
-          },
-          {
             "name": "qid",
             "in": "query",
             "type": "string"
@@ -208,11 +203,6 @@
           },
           {
             "name": "qid",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "uid",
             "in": "query",
             "type": "string"
           }
