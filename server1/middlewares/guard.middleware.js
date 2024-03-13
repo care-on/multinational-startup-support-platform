@@ -10,6 +10,7 @@ module.exports = async (req, res, next) => {
     await accessToken.verifyToken(token[1]);
     const payload = await accessToken.decodeToken(token[1]);
     req.user = payload;
+    console.log(req.user);
     next();
   } catch (e) {
     next(e);

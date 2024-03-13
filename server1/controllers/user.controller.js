@@ -28,8 +28,8 @@ class UserController {
       const { username, email, password, region, tel } = req.body;
       const newUser = new User(username, email, password, region, tel);
 
-      if (req.user.uid !== uid) throw new Error("not Matched User");
-      userService.update({ uid: uid, ...newUser });
+      if (req.user.uid !== Number(uid)) throw new Error("not Matched User");
+      userService.update({ uid: Number(uid), ...newUser });
       res.status(201).json({ message: "User updated successfully." });
     } catch (error) {
       next(error);
@@ -39,9 +39,9 @@ class UserController {
   async delete(req, res, next) {
     try {
       const { uid } = req.query;
-      if (req.user.uid !== uid) throw new Error("not Matched User");
+      if (req.user.uid !== Number(uid)) throw new Error("not Matched User");
 
-      userService.delete(uid);
+      userService.delete(Number(uid));
       res.status(201).json({ message: "User deleted successfully." });
     } catch (error) {
       next(error);

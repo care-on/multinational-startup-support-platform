@@ -41,6 +41,16 @@ class QuestionService {
       throw err;
     }
   }
+  async findAuthor(qid) {
+    try {
+      const question = this.questions.find((question) => question.qid === qid);
+      console.log(question);
+      if (!question) throw new Error("cannot find question post");
+      return question.uid;
+    } catch (err) {
+      throw err;
+    }
+  }
 
   async update(qid, updatedQuestion) {
     try {
