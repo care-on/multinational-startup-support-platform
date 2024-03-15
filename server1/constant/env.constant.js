@@ -13,4 +13,13 @@ module.exports = {
     ACCESS_SECRET: process.env.ACCESS_SECRET,
     REFRESH_SECRET: process.env.REFRESH_SECRET,
   },
+  MAIL: {
+    SERVICE: process.env.MAIL_SERVICE,
+    HOST: process.env.MAIL_HOST,
+    PORT: process.env.MAIL_PORT,
+    AUTH: {
+      USER: process.env.MAIL_AUTH_USER,
+      PASSWORD: process.env.MAIL_AUTH_PASSWORD,
+    },
+  },
 };
