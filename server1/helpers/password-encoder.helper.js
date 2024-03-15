@@ -7,7 +7,7 @@ class PasswordEncoder {
 
   async initialize() {
     try {
-      this.salt = await crypto.genSaltSync(saltRounds);
+      this.salt = await crypto.genSaltSync(this.saltRounds);
     } catch (err) {
       throw err;
     }
