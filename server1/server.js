@@ -6,9 +6,10 @@ const apiIndex = require("./api/index");
 const errorMiddleware = require("./middlewares/error.middleware");
 const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require("./swagger-output");
+const cors = require("cors");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.use(cors());
 /**@ROUTER router render point */
 app.use("/api", apiIndex);
 
