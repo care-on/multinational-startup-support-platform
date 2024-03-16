@@ -1,3 +1,6 @@
+const mailBody = require("../config/mail-body.config");
+const passwordEncoder = require("../config/password-encoder.config");
+const mailHelper = require("../helpers/mail.helper");
 const User = require("../models/user.model");
 const userService = require("../services/user.service");
 
@@ -5,8 +8,14 @@ class UserController {
   async create(req, res, next) {
     try {
       const { username, email, password, region, tel } = req.body;
-      const newUser = new User(username, email, password, region, tel);
+      const encodedPassword = await passwordEncoder.encode(password);
+      const newUser = new User(username, email, encodedPassword, region, tel);
       userService.create(newUser);
+      mailHelper.send(
+        email,
+        mailBody.welcome.subject(username),
+        mailBody.welcome.html(username)
+      );
       res.status(201).json({ message: "User created successfully." });
     } catch (error) {
       next(error);
