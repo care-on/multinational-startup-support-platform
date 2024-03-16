@@ -12,7 +12,15 @@ class QuestionService {
       const [rows, fields] = await connection_pool.query(
         "call GetQuestionDetails()"
       );
-      this.questions = rows[0];
+      rows[0].forEach(async (row) => {
+        const [childRows, childFields] = await connection_pool.query(
+          "call GetAnswersByQuestionId(?)",
+          [row.qid]
+        );
+        this.questions.push(
+          new question.hierarchy({ ...row, child: childRows[0] }).toJson()
+        );
+      });
     } catch (err) {
       throw err;
     }
@@ -28,8 +36,8 @@ class QuestionService {
         "call GetQuestionDetailsById(?)",
         [result[0].insertId]
       );
-      this.questions.push(rows[0][0]);
-      return rows[0];
+      this.questions.push(new question.hierarchy({ ...rows[0][0], child: [] }));
+      return rows[0][0];
     } catch (err) {
       throw err;
     }
