@@ -7,9 +7,12 @@ const errorMiddleware = require("./middlewares/error.middleware");
 const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require("./swagger-output");
 const cors = require("cors");
+const morganMiddleware = require("./middlewares/morgan.middleware");
+const logger = require("./config/logger.config");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
+
 /**@ROUTER router render point */
 app.use("/api", apiIndex);
 
@@ -21,9 +24,9 @@ connection.connect((err) => {
   if (err) {
     throw err;
   } else {
-    console.log("successful");
+    logger.info("db connection good");
   }
 });
 app.listen(port, () => {
-  console.log("server open!");
+  logger.info("server open!");
 });
