@@ -5,7 +5,6 @@ class QuestionController {
   async create(req, res, next) {
     try {
       const { title, content } = req.body;
-      /**TODO: uid --change--> uid in parsing guard middleware */
       const { uid } = req.user;
       const newQuestion = new question.default(uid, title, content);
       questionService.create(newQuestion);
@@ -34,7 +33,9 @@ class QuestionController {
   async update(req, res, next) {
     try {
       const { qid } = req.query;
-      const { uid } = req.user;
+      const uid = await questionService.findAuthor(Number(qid));
+
+      if (req.user.uid !== uid) throw new Error("not Matched User");
       const { title, content } = req.body;
       const updatedQuestion = new question.default(uid, title, content);
 
@@ -56,9 +57,6 @@ class QuestionController {
       next(error);
     }
   }
-
-  /**TODO: find who author */
-  async isCheckedAuthor() {}
 }
 
 module.exports = new QuestionController();
