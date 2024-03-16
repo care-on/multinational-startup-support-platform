@@ -8,7 +8,7 @@ class AuthController {
       const { email, password } = req.body;
 
       const user = await userService.readOneByEmail(email);
-      if (!(await passwordEncoder.compare(user.password, password)))
+      if (!(await passwordEncoder.compare(password, user.password)))
         throw new Error("not matched user password");
       const payload = {
         uid: user.uid,
