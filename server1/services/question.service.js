@@ -1,4 +1,5 @@
 const { connection_pool } = require("../config/db.config");
+const { question } = require("../models/question.model");
 
 class QuestionService {
   constructor() {
@@ -9,9 +10,9 @@ class QuestionService {
   async initializeQuestions() {
     try {
       const [rows, fields] = await connection_pool.query(
-        "SELECT * FROM questions"
+        "call GetQuestionDetails()"
       );
-      this.questions = rows;
+      this.questions = rows[0];
     } catch (err) {
       throw err;
     }
@@ -24,10 +25,10 @@ class QuestionService {
         newQuestion
       );
       const [rows, fields] = await connection_pool.query(
-        "SELECT * FROM questions WHERE qid = ?",
+        "call GetQuestionDetailsById(?)",
         [result[0].insertId]
       );
-      this.questions.push(rows[0]);
+      this.questions.push(rows[0][0]);
       return rows[0];
     } catch (err) {
       throw err;
@@ -41,10 +42,21 @@ class QuestionService {
       throw err;
     }
   }
+
+  async readOneByQid(qid) {
+    try {
+      const question = this.questions.find(
+        (question) => question.qid === Number(qid)
+      );
+      if (!question) throw new Error("cannot find question post");
+      return question;
+    } catch (err) {
+      throw err;
+    }
+  }
   async findAuthor(qid) {
     try {
       const question = this.questions.find((question) => question.qid === qid);
-      console.log(question);
       if (!question) throw new Error("cannot find question post");
       return question.uid;
     } catch (err) {
@@ -61,7 +73,7 @@ class QuestionService {
 
       // 업데이트된 질문을 다시 가져와서 업데이트
       const [rows, fields] = await connection_pool.query(
-        "SELECT * FROM questions WHERE qid = ?",
+        "call GetQuestionDetailsById(?)",
         [qid]
       );
 
@@ -79,7 +91,7 @@ class QuestionService {
   async delete(qid) {
     try {
       const result = await connection_pool.query(
-        "DELETE FROM questions WHERE qid = ?",
+        "UPDATE questions SET deleted_date = CURRENT_TIMESTAMP WHERE qid = ?",
         [qid]
       );
 
