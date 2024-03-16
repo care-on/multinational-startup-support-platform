@@ -14,8 +14,8 @@ class HierarchicalQuestion {
     this.content = question.content;
     this.created_date = question.created_date;
     this.updated_date = question.updated_date;
-    this.hit = question.hit;
-    this.like = question.like;
+    this.hit_count = question.hit_count;
+    this.like_count = question.like_count;
     this.child = question.child;
   }
 
@@ -27,8 +27,8 @@ class HierarchicalQuestion {
       content: this.content,
       created_date: this.created_date,
       updated_date: this.updated_date,
-      hit: this.hit,
-      like: this.like,
+      hit_count: this.hit_count,
+      like_count: this.like_count,
       child: this.child,
     };
   }
