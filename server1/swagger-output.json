@@ -270,20 +270,12 @@
             "description": "Created"
           }
         }
-      }
-    },
-    "/question/{qid}/answer/{aid}": {
+      },
       "put": {
         "description": "",
         "parameters": [
           {
             "name": "qid",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "aid",
             "in": "path",
             "required": true,
             "type": "string"
@@ -327,14 +319,13 @@
             "type": "string"
           },
           {
-            "name": "aid",
-            "in": "path",
-            "required": true,
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
-            "name": "authorization",
-            "in": "header",
+            "name": "qid",
+            "in": "query",
             "type": "string"
           },
           {
@@ -377,5 +368,9 @@
         }
       }
     }
+  },
+  "x-cors": {
+    "enabled": true,
+    "description": "Cross-Origin Resource Sharing (CORS) is supported for this API."
   }
 }
