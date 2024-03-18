@@ -12,7 +12,7 @@ const logger = require("./config/logger.config");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
-
+app.use(morganMiddleware);
 /**@ROUTER router render point */
 app.use("/api", apiIndex);
 
@@ -24,7 +24,7 @@ connection.connect((err) => {
   if (err) {
     throw err;
   } else {
-    logger.info("db connection good");
+    logger.info("successfully connect db connection pool .. !");
   }
 });
 app.listen(port, () => {
