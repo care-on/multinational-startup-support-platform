@@ -25,6 +25,7 @@ class QuestionController {
     try {
       const { qid } = req.params;
       const question = await questionService.readOneByQid(qid);
+      //questionService.updateHit(qid,req.user.uid);
       res.json(question);
     } catch (err) {
       next(err);
