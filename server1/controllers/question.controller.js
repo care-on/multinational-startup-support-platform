@@ -15,7 +15,10 @@ class QuestionController {
   }
   async read(req, res, next) {
     try {
-      const questions = await questionService.read();
+      const pageNumber = parseInt(req.query.pageNumber) || 1;
+      const pageSize = parseInt(req.query.pageSize) || 10;
+
+      const questions = await questionService.read(pageNumber, pageSize);
       res.json(questions);
     } catch (error) {
       next(error);
