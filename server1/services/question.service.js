@@ -306,6 +306,34 @@ class QuestionService {
       throw err;
     }
   }
+  async likeWithAnswer(uid, qid, aid) {
+    try {
+      const connection = await connection_pool.getConnection();
+      await connection.beginTransaction();
+
+      const [rows, fields] = await connection.query(
+        "select * from answer_like_log where uid = ? and aid =?",
+        [uid, aid]
+      );
+
+      if (rows.length != 0) throw new Error("already like this answer");
+      await connection.query(
+        "insert into answer_like_log(aid,uid,likes) values(?,?,?)",
+        [aid, uid, 1]
+      );
+      const foundIndex = this.questions.findIndex(
+        (question) => question.qid === Number(qid)
+      );
+      const foundChildIndex = this.questions[foundIndex].child.findIndex(
+        (answer) => answer.aid === Number(aid)
+      );
+      this.questions[foundIndex].child[foundChildIndex].like_count++;
+      await connection.commit();
+      connection.release();
+    } catch (err) {
+      throw err;
+    }
+  }
   async unLikeWithQuestion(uid, qid) {
     try {
       const connection = await connection_pool.getConnection();
@@ -325,6 +353,35 @@ class QuestionService {
         (question) => question.qid === Number(qid)
       );
       this.questions[foundIndex].like_count--;
+      await connection.commit();
+      connection.release();
+    } catch (err) {
+      throw err;
+    }
+  }
+  async unLikeWithAnswer(uid, qid, aid) {
+    try {
+      const connection = await connection_pool.getConnection();
+      await connection.beginTransaction();
+
+      const [rows, fields] = await connection.query(
+        "select * from answer_like_log where uid = ? and aid =?",
+        [uid, aid]
+      );
+
+      if (rows.length == 0) throw new Error("already unLike this answer");
+      await connection.query(
+        "delete from answer_like_log where aid = ? and uid = ?",
+        [aid, uid]
+      );
+      const foundIndex = this.questions.findIndex(
+        (question) => question.qid === Number(qid)
+      );
+      const foundChildIndex = this.questions[foundIndex].child.findIndex(
+        (answer) => answer.aid === Number(aid)
+      );
+
+      this.questions[foundIndex].child[foundChildIndex].like_count--;
       await connection.commit();
       connection.release();
     } catch (err) {

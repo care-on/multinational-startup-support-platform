@@ -33,7 +33,32 @@ class AnswerController {
       next(error);
     }
   }
+  async like(req, res, next) {
+    try {
+      const { uid } = req.user;
+      const { qid } = req.params;
+      const { aid } = req.query;
 
+      await questionService.likeWithAnswer(uid, qid, aid);
+
+      res.json({ state: "success" });
+    } catch (err) {
+      next(err);
+    }
+  }
+  async unLike(req, res, next) {
+    try {
+      const { uid } = req.user;
+      const { qid } = req.params;
+      const { aid } = req.query;
+
+      await questionService.unLikeWithAnswer(uid, qid, aid);
+
+      res.json({ state: "success" });
+    } catch (err) {
+      next(err);
+    }
+  }
   async delete(req, res, next) {
     try {
       const { qid, aid } = req.query;
