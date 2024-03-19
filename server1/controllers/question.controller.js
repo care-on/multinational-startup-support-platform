@@ -27,13 +27,40 @@ class QuestionController {
   async readOneByQid(req, res, next) {
     try {
       const { qid } = req.params;
-      const question = await questionService.readOneByQid(qid);
-      //questionService.updateHit(qid,req.user.uid);
+      const question = await questionService.readOneByQidAndUpdateHit(
+        qid,
+        req.user.uid
+      );
       res.json(question);
     } catch (err) {
       next(err);
     }
   }
+  async like(req, res, next) {
+    try {
+      const { uid } = req.user;
+      const { qid } = req.params;
+
+      await questionService.likeWithQuestion(uid, qid);
+
+      res.json({ state: "success" });
+    } catch (err) {
+      next(err);
+    }
+  }
+  async unLike(req, res, next) {
+    try {
+      const { uid } = req.user;
+      const { qid } = req.params;
+
+      await questionService.unLikeWithQuestion(uid, qid);
+
+      res.json({ state: "success" });
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async update(req, res, next) {
     try {
       const { qid } = req.query;

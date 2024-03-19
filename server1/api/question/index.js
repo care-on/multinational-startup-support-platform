@@ -5,9 +5,13 @@ const guardMiddleware = require("../../middlewares/guard.middleware");
 const router = require("express").Router();
 
 /**CRUD QUESTION */
+/**TODO:consider pagination behavior */
 router.post("/", guardMiddleware, questionController.create);
 router.get("/", questionController.read);
 router.get("/:qid", guardMiddleware, questionController.readOneByQid);
+router.post("/:qid/like", guardMiddleware, questionController.like);
+router.delete("/:qid/unlike", guardMiddleware, questionController.unLike);
+
 router.put("/", guardMiddleware, questionController.update);
 router.delete("/", guardMiddleware, questionController.delete);
 

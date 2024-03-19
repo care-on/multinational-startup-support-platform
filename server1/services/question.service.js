@@ -1,6 +1,6 @@
 const { connection_pool } = require("../config/db.config");
 const { question } = require("../models/question.model");
-
+const logger = require("../config/logger.config");
 class QuestionService {
   constructor() {
     this.questions = [];
@@ -106,18 +106,43 @@ class QuestionService {
     return paginatedItems;
   }
 
-  async readOneByQid(qid) {
+  async readOneByQidAndUpdateHit(qid, uid) {
     try {
-      const question = this.questions.find(
+      const foundIndex = this.questions.findIndex(
         (question) => question.qid === Number(qid)
       );
+      await this.updateHit(foundIndex, qid, uid);
       if (!question) throw new Error("cannot find question post");
-      return question;
+      return this.questions[foundIndex];
     } catch (err) {
       throw err;
     }
   }
-  async updateHit(qid, uid) {}
+
+  async updateHit(idx, qid, uid) {
+    try {
+      const connection = await connection_pool.getConnection();
+      await connection.beginTransaction();
+
+      const [rows, fields] = await connection.query(
+        "select * from question_hit_log where qid = ? and uid = ?",
+        [qid, uid]
+      );
+
+      if (rows.length === 0) {
+        await connection.query(
+          "insert into question_hit_log(qid, uid, hit) values(?,?,?)",
+          [qid, uid, 1]
+        );
+        this.questions[idx].hit_count = 1;
+      }
+
+      await connection.commit();
+      connection.release();
+    } catch (err) {
+      throw err;
+    }
+  }
   async findAuthor(qid) {
     try {
       const question = this.questions.find((question) => question.qid === qid);
@@ -252,6 +277,56 @@ class QuestionService {
       } else {
         throw new Error("not found answer.");
       }
+    } catch (err) {
+      throw err;
+    }
+  }
+  async likeWithQuestion(uid, qid) {
+    try {
+      const connection = await connection_pool.getConnection();
+      await connection.beginTransaction();
+
+      const [rows, fields] = await connection.query(
+        "select * from question_like_log where uid = ? and qid =?",
+        [uid, qid]
+      );
+
+      if (rows.length != 0) throw new Error("already like this post");
+      await connection.query(
+        "insert into question_like_log(qid,uid,likes) values(?,?,?)",
+        [qid, uid, 1]
+      );
+      const foundIndex = this.questions.findIndex(
+        (question) => question.qid === Number(qid)
+      );
+      this.questions[foundIndex].like_count++;
+      await connection.commit();
+      connection.release();
+    } catch (err) {
+      throw err;
+    }
+  }
+  async unLikeWithQuestion(uid, qid) {
+    try {
+      const connection = await connection_pool.getConnection();
+      await connection.beginTransaction();
+
+      const [rows, fields] = await connection.query(
+        "select * from question_like_log where uid = ? and qid =?",
+        [uid, qid]
+      );
+
+      if (rows.length == 0) throw new Error("already unLike this post");
+      await connection.query(
+        "delete from question_like_log where qid = ? and uid = ?",
+        [qid, uid]
+      );
+      const foundIndex = this.questions.findIndex(
+        (question) => question.qid === Number(qid)
+      );
+      this.questions[foundIndex].like_count--;
+      await connection.commit();
+      connection.release();
     } catch (err) {
       throw err;
     }
