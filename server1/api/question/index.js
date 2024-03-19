@@ -19,5 +19,7 @@ router.delete("/", guardMiddleware, questionController.delete);
 router.post("/:qid/answer", guardMiddleware, answerController.create);
 router.put("/:qid/answer", guardMiddleware, answerController.update);
 router.delete("/:qid/answer", guardMiddleware, answerController.delete);
+router.post("/:qid/answer/like", guardMiddleware, answerController.like);
+router.delete("/:qid/answer/unlike", guardMiddleware, answerController.unLike);
 
 module.exports = router;

@@ -1,3 +1,4 @@
+const logger = require("../config/logger.config");
 const { question } = require("../models/question.model");
 const questionService = require("../services/question.service");
 
@@ -17,6 +18,7 @@ class QuestionController {
     try {
       const pageNumber = parseInt(req.query.pageNumber) || 1;
       const pageSize = parseInt(req.query.pageSize) || 10;
+      logger.debug(pageNumber);
 
       const questions = await questionService.read(pageNumber, pageSize);
       res.json(questions);
