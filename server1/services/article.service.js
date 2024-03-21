@@ -2,10 +2,25 @@ const { connection_pool } = require("../config/db.config");
 const logger = require("../config/logger.config");
 
 class ArticleService {
-  async read() {
+  async read(pageNumber, pageSize) {
     try {
-      const [rows, fields] = await connection_pool.query("call GetArticles()");
-      return rows[0];
+      const connection = await connection_pool.getConnection();
+      await connection.beginTransaction();
+
+      const [rows, fields] = await connection.query("call GetArticles(?,?)", [
+        pageNumber,
+        pageSize,
+      ]);
+      const [childRows, childFields] = await connection.query(
+        "call GetArticlePageCount(?)",
+        [pageSize]
+      );
+      await connection.commit();
+      connection.release();
+      return {
+        page_count: childRows[0][0].pageCount,
+        data: rows[0],
+      };
     } catch (err) {
       throw err;
     }
