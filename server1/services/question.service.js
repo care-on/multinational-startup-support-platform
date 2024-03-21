@@ -87,12 +87,15 @@ class QuestionService {
         const { child, ...questionWithoutChild } = question;
         return questionWithoutChild;
       });
-
-      return await this.getItemsForPage(
+      const itemOfQuestion = await this.getItemsForPage(
         questionsWithoutChild,
         pageNumber,
         pageSize
       );
+      return {
+        page_count: Math.ceil(this.questions.length / Number(pageSize)),
+        data: itemOfQuestion,
+      };
     } catch (err) {
       throw err;
     }
