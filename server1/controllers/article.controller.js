@@ -3,7 +3,9 @@ const articleService = require("../services/article.service");
 class ArticleController {
   async read(req, res, next) {
     try {
-      const articles = await articleService.read();
+      const pageNumber = parseInt(req.query.pageNumber) || 1;
+      const pageSize = parseInt(req.query.pageSize) || 10;
+      const articles = await articleService.read(pageNumber, pageSize);
       res.json(articles);
     } catch (err) {
       next(err);
