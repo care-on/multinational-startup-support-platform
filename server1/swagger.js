@@ -7,6 +7,11 @@ const doc = {
   },
   host: "localhost:8000/api",
   schemes: ["http"],
+  "x-cors": {
+    enabled: true,
+    description:
+      "Cross-Origin Resource Sharing (CORS) is supported for this API.",
+  },
 };
 
 const outputFile = "./swagger-output.json";

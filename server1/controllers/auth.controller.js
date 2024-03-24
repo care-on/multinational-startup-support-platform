@@ -1,3 +1,4 @@
+const passwordEncoder = require("../config/password-encoder.config");
 const { accessToken, refreshToken } = require("../config/token.config");
 const userService = require("../services/user.service");
 
@@ -7,7 +8,7 @@ class AuthController {
       const { email, password } = req.body;
 
       const user = await userService.readOneByEmail(email);
-      if (user.password !== password)
+      if (!(await passwordEncoder.compare(password, user.password)))
         throw new Error("not matched user password");
       const payload = {
         uid: user.uid,
