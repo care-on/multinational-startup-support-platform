@@ -17,9 +17,22 @@ class CardNewsService {
       );
       await connection.commit();
       connection.release();
+      const rtnJson = [];
+      rows[0].forEach((e) => {
+        const { content, ...articleWithoutContent } = e;
+        const articleWithoutBackslashes = JSON.parse(
+          content.replace(/[\u0000-\u0019]+/g, "")
+        );
+
+        rtnJson.push({
+          ...articleWithoutContent,
+          content: articleWithoutBackslashes,
+        });
+      });
+
       return {
         page_count: childRows[0][0].pageCount,
-        data: rows[0],
+        data: rtnJson,
       };
     } catch (err) {
       throw err;
