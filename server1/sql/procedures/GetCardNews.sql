@@ -12,6 +12,7 @@ BEGIN
     -- 페이지네이션된 데이터 반환
     SELECT a.idcardnews, 
            a.title, 
+           a.content,
            a.release_date, 
            COALESCE(h.hit_count, 0) AS hit_count,
            COALESCE(l.like_count, 0) AS like_count

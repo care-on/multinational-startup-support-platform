@@ -20,13 +20,13 @@ class CardNewsService {
       const rtnJson = [];
       rows[0].forEach((e) => {
         const { content, ...articleWithoutContent } = e;
-        const articleWithoutBackslashes = JSON.parse(
+        const { images, notice } = JSON.parse(
           content.replace(/[\u0000-\u0019]+/g, "")
         );
 
         rtnJson.push({
           ...articleWithoutContent,
-          content: articleWithoutBackslashes,
+          content: images,
         });
       });
 
@@ -47,12 +47,16 @@ class CardNewsService {
       if (rows.length === 0) throw new Error("nop");
       const { content, ...articleWithoutContent } =
         await this.readOneByCidAndUpdateHit(cid, uid);
-      const articleWithoutBackslashes = JSON.parse(
+      const { images, notice } = JSON.parse(
         content.replace(/[\u0000-\u0019]+/g, "")
       );
+      const parsedNotice = notice.replace("\\", "");
       const article = {
         ...articleWithoutContent,
-        content: articleWithoutBackslashes,
+        content: {
+          images: images,
+          notice: parsedNotice,
+        },
       };
       return article;
     } catch (err) {

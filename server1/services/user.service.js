@@ -7,7 +7,7 @@ class UserService {
   async initializeUsers() {
     try {
       const [rows, fields] = await connection_pool.query("SELECT * FROM users");
-      this.users = rows; // µ¥ÀÌÅÍº£ÀÌ½º¿¡¼­ °¡Á®¿Â »ç¿ëÀÚ ¸ñ·ÏÀ» ÇÒ´ç
+      this.users = rows; // ï¿½ï¿½ï¿½ï¿½ï¿½Íºï¿½ï¿½Ì½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½
     } catch (err) {
       throw err;
     }
