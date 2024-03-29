@@ -7,21 +7,23 @@ class UserService {
   async initializeUsers() {
     try {
       const [rows, fields] = await connection_pool.query("SELECT * FROM users");
-      this.users = rows; // µ¥ÀÌÅÍº£ÀÌ½º¿¡¼­ °¡Á®¿Â »ç¿ëÀÚ ¸ñ·ÏÀ» ÇÒ´ç
+      this.users = rows; // ï¿½ï¿½ï¿½ï¿½ï¿½Íºï¿½ï¿½Ì½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½
     } catch (err) {
       throw err;
     }
   }
   async create(newUser) {
     try {
-      const result = await connection_pool.query(
-        "INSERT INTO users SET ?",
-        newUser
-      );
-      const [rows, fields] = await connection_pool.query(
+      const connection = await connection_pool.getConnection();
+      await connection.beginTransaction();
+      const result = await connection.query("INSERT INTO users SET ?", newUser);
+      const [rows, fields] = await connection.query(
         "SELECT * FROM users WHERE uid = ?",
         [result[0].insertId]
       );
+
+      await connection.commit();
+      connection.release();
       this.users.push(rows[0]);
       return rows[0];
     } catch (err) {
@@ -51,23 +53,25 @@ class UserService {
 
   async update(updatedUser) {
     try {
+      const connection = await connection_pool.getConnection();
+      await connection.beginTransaction();
       const result = await connection_pool.query(
         "UPDATE users SET ? WHERE uid = ?",
         [updatedUser, updatedUser.uid]
       );
-      if (result[0].affectedRows > 0) {
-        const [updatedUserData] = await connection_pool.query(
-          "SELECT * FROM users WHERE uid = ?",
-          [updatedUser.uid]
-        );
-        const userIndex = this.users.findIndex(
-          (user) => user.uid === updatedUser.uid
-        );
-        this.users[userIndex] = updatedUserData[0];
-        return updatedUserData[0];
-      } else {
-        throw new Error("User not found");
-      }
+      if (result[0].affectedRows <= 0) throw new Error("User not found");
+      const [updatedUserData] = await connection_pool.query(
+        "SELECT * FROM users WHERE uid = ?",
+        [updatedUser.uid]
+      );
+      const userIndex = this.users.findIndex(
+        (user) => user.uid === updatedUser.uid
+      );
+      this.users[userIndex] = updatedUserData[0];
+
+      await connection.commit();
+      connection.release();
+      return updatedUserData[0];
     } catch (err) {
       throw err;
     }
@@ -82,7 +86,6 @@ class UserService {
       console.log(result);
       if (result[0].affectedRows > 0) {
         const deletedUser = this.users.find((user) => user.uid === uid);
-        console.log(`a`, deletedUser);
         this.users = this.users.filter((user) => user.uid !== uid);
         return deletedUser;
       } else {
