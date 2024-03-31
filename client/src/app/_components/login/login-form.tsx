@@ -3,7 +3,9 @@
 import { Alert, Button, Form, Input } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import { signIn } from 'next-auth/react';
-import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Router from 'next/router';
 import React, { useCallback, useState } from 'react';
 
 interface ILoginFormValue {
@@ -15,17 +17,23 @@ const LoginForm = () => {
   const [form] = useForm<ILoginFormValue>();
   const [isLoading, setIsLoading] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
-
+  const router = useRouter();
   const handleFinish = useCallback(async (value: ILoginFormValue) => {
     setIsLoading(true);
 
     try {
       console.log(value);
-      await signIn('login-credentials', {
+      const response = await signIn('login-credentials', {
         username: value.username,
         password: value.password,
       });
+      console.log(response);
+      alert('로그인에 성공했습니다.');
+      router.push('/');
     } catch (error) {
+      console.error(error);
+      alert('로그인에 실패했습니다. 아이디 또는 비밀번호를 확인해주세요.');
+    } finally {
       setIsLoading(false);
     }
   }, []);
