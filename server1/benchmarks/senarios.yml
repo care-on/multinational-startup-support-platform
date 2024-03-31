@@ -1,0 +1,79 @@
+config:
+  target: "http://localhost:8000/api" # 테스트할 대상 서버의 URL
+  phases:
+    - duration: 60 # 총 테스트 지속 시간 (초)
+      arrivalRate: 10 # 초당 도착하는 요청 수
+
+scenarios:
+  - flow:
+      - post:
+          url: "/user" # POST /user 요청 시나리오
+          headers:
+            Content-Type: "application/json"
+          json:
+            username: "testuser"
+            email: "testuser@example.com"
+            password: "password123"
+            region: "US"
+            tel: "123456789"
+      - get:
+          url: "/user" # GET /user 요청 시나리오
+      - put:
+          url: "/user" # PUT /user 요청 시나리오
+          headers:
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjI5LCJ1c2VybmFtZSI6Imh5dW53b28iLCJlbWFpbCI6ImtodzQ0MjBAbmF2ZXIuY29tIiwicmVnaW9uIjoiYXNkIiwidGVsIjoiYXNkIiwiaWF0IjoxNzEwNzM4NjI0LCJleHAiOjE3MTA3NDA0MjR9.s_4mUBaHNQdrzs8CB56j-yyazIHD1m2b5zxxNaGcK_Q"
+          json:
+            username: "updateduser"
+            email: "updateduser@example.com"
+            password: "updatedpassword123"
+            region: "EU"
+            tel: "987654321"
+      - delete:
+          url: "/user" # DELETE /user 요청 시나리오
+          headers:
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjI5LCJ1c2VybmFtZSI6Imh5dW53b28iLCJlbWFpbCI6ImtodzQ0MjBAbmF2ZXIuY29tIiwicmVnaW9uIjoiYXNkIiwidGVsIjoiYXNkIiwiaWF0IjoxNzEwNzM4NjI0LCJleHAiOjE3MTA3NDA0MjR9.s_4mUBaHNQdrzs8CB56j-yyazIHD1m2b5zxxNaGcK_Q"
+      - post:
+          url: "/question" # POST /question 요청 시나리오
+          headers:
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjI5LCJ1c2VybmFtZSI6Imh5dW53b28iLCJlbWFpbCI6ImtodzQ0MjBAbmF2ZXIuY29tIiwicmVnaW9uIjoiYXNkIiwidGVsIjoiYXNkIiwiaWF0IjoxNzEwNzM4NjI0LCJleHAiOjE3MTA3NDA0MjR9.s_4mUBaHNQdrzs8CB56j-yyazIHD1m2b5zxxNaGcK_Q"
+          json:
+            title: "Test Question"
+            content: "This is a test question."
+      - get:
+          url: "/question" # GET /question 요청 시나리오
+      - put:
+          url: "/question" # PUT /question 요청 시나리오
+          headers:
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjI5LCJ1c2VybmFtZSI6Imh5dW53b28iLCJlbWFpbCI6ImtodzQ0MjBAbmF2ZXIuY29tIiwicmVnaW9uIjoiYXNkIiwidGVsIjoiYXNkIiwiaWF0IjoxNzEwNzM4NjI0LCJleHAiOjE3MTA3NDA0MjR9.s_4mUBaHNQdrzs8CB56j-yyazIHD1m2b5zxxNaGcK_Q"
+          json:
+            qid: "123456"
+            title: "Updated Question"
+            content: "This question has been updated."
+      - delete:
+          url: "/question" # DELETE /question 요청 시나리오
+          headers:
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjI5LCJ1c2VybmFtZSI6Imh5dW53b28iLCJlbWFpbCI6ImtodzQ0MjBAbmF2ZXIuY29tIiwicmVnaW9uIjoiYXNkIiwidGVsIjoiYXNkIiwiaWF0IjoxNzEwNzM4NjI0LCJleHAiOjE3MTA3NDA0MjR9.s_4mUBaHNQdrzs8CB56j-yyazIHD1m2b5zxxNaGcK_Q"
+      - get:
+          url: "/question/123456" # GET /question/{qid} 요청 시나리오
+          headers:
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjI5LCJ1c2VybmFtZSI6Imh5dW53b28iLCJlbWFpbCI6ImtodzQ0MjBAbmF2ZXIuY29tIiwicmVnaW9uIjoiYXNkIiwidGVsIjoiYXNkIiwiaWF0IjoxNzEwNzM4NjI0LCJleHAiOjE3MTA3NDA0MjR9.s_4mUBaHNQdrzs8CB56j-yyazIHD1m2b5zxxNaGcK_Q"
+      - post:
+          url: "/question/123456/answer" # POST /question/{qid}/answer 요청 시나리오
+          headers:
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjI5LCJ1c2VybmFtZSI6Imh5dW53b28iLCJlbWFpbCI6ImtodzQ0MjBAbmF2ZXIuY29tIiwicmVnaW9uIjoiYXNkIiwidGVsIjoiYXNkIiwiaWF0IjoxNzEwNzM4NjI0LCJleHAiOjE3MTA3NDA0MjR9.s_4mUBaHNQdrzs8CB56j-yyazIHD1m2b5zxxNaGcK_Q"
+          json:
+            content: "This is an answer to the question."
+      - put:
+          url: "/question/123456/answer" # PUT /question/{qid}/answer 요청 시나리오
+          headers:
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjI5LCJ1c2VybmFtZSI6Imh5dW53b28iLCJlbWFpbCI6ImtodzQ0MjBAbmF2ZXIuY29tIiwicmVnaW9uIjoiYXNkIiwidGVsIjoiYXNkIiwiaWF0IjoxNzEwNzM4NjI0LCJleHAiOjE3MTA3NDA0MjR9.s_4mUBaHNQdrzs8CB56j-yyazIHD1m2b5zxxNaGcK_Q"
+          query:
+            aid: "789012"
+          json:
+            content: "This answer has been updated."
+      - delete:
+          url: "/question/123456/answer" # DELETE /question/{qid}/answer 요청 시나리오
+          headers:
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjI5LCJ1c2VybmFtZSI6Imh5dW53b28iLCJlbWFpbCI6ImtodzQ0MjBAbmF2ZXIuY29tIiwicmVnaW9uIjoiYXNkIiwidGVsIjoiYXNkIiwiaWF0IjoxNzEwNzM4NjI0LCJleHAiOjE3MTA3NDA0MjR9.s_4mUBaHNQdrzs8CB56j-yyazIHD1m2b5zxxNaGcK_Q"
+          query:
+            aid: "789012"
