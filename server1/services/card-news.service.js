@@ -80,8 +80,8 @@ class CardNewsService {
         );
       }
       const [childRows, childFields] = await connection.query(
-        "call GetCardNewsDetail (?)",
-        [cid]
+        "call GetCardNewsDetail (?,?)",
+        [cid, uid]
       );
       await connection.commit();
       connection.release();

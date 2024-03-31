@@ -63,8 +63,8 @@ class ArticleService {
         );
       }
       const [childRows, childFields] = await connection.query(
-        "call GetArticleDetails (?)",
-        [aid]
+        "call GetArticleDetails (?,?)",
+        [aid, uid]
       );
       await connection.commit();
       connection.release();
